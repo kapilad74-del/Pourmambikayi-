@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Surprise 💖</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #d16ba5, #ff758c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 350px;
+  position: relative;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 80%;
+  border-radius: 8px;
+  border: 2px solid #ff758c;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.primary, .yes-btn, .next-btn, .finish-btn {
+  background-color: #ff4e78;
+  color: white;
+}
+
+.primary:hover, .yes-btn:hover, .next-btn:hover, .finish-btn:hover {
+  background-color: #ff2e63;
+}
+
+.no-btn {
+  background-color: #eee;
+  position: absolute;
+}
+
+.hidden {
+  display: none;
+}
+
+#finalMessage {
+  white-space: pre-wrap;
+  max-height: 250px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 16px;
+  border: 1px solid #ff758c;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Musique -->
+<audio id="bgMusic" src="musique.mp3" loop></audio>
+
+<div class="card">
+
+  <!-- Étape 1 -->
+  <div id="step1">
+    <h1>Surprise !!! 😊</h1>
+    <input type="text" id="nameInput" placeholder="Entre ton prénom 💌">
+    <br>
+    <button class="primary" onclick="goToStep2()">C'est parti !</button>
+  </div>
+
+  <!-- Étape 2 -->
+  <div id="step2" class="hidden">
+    <h1 id="questionText"></h1>
+    <br>
+    <button class="yes-btn" onclick="sayYes()">Oui 😍</button>
+    <button class="no-btn" id="noBtn" onclick="fleeNo()">Non 😏</button>
+  </div>
+
+  <!-- Étape 3 -->
+  <div id="step3" class="hidden">
+    <h1>💌 Pour ma Lastenie 💖</h1>
+    <div id="finalMessage"></div>
+    <br>
+    <button class="next-btn hidden" id="continueBtn" onclick="goToStep4()">Veux-tu continuer ?</button>
+    <button class="no-btn hidden" id="noContinueBtn" onclick="fleeNoContinue()">Non 😏</button>
+  </div>
+
+  <!-- Étape 4 -->
+  <div id="step4" class="hidden">
+    <h1>💖</h1>
+    <img id="photoDisplay" src="" alt="Photo">
+    <br>
+    <button class="next-btn" id="nextPhotoBtn" onclick="nextPhoto()">Suivant ➡️</button>
+    <button class="finish-btn hidden" id="finishBtn" onclick="finishMessage()">Terminer</button>
+    <div id="loveMessage" class="hidden" style="margin-top:20px; font-size:18px; color:#ff2e63;"></div>
+  </div>
+
+</div>
+
+<script>
+const finalText = `Ma très chère Lastenie, mon petit trésor,
+Aujourd’hui, le monde célèbre un jour unique, le jour où la plus merveilleuse des filles a vu le jour. Joyeux 16ème anniversaire, ma gow, mon petit chimpanzé préféré 😻.
+En te voyant grandir, je me rends compte à quel point je suis chanceux. Chaque sourire que tu m’offres, chaque rire que nous partageons, chaque moment où ton cœur se confie au mien… tout cela est un trésor que je chérirai pour toujours.
+Depuis que tu es entrée dans ma vie, chaque jour a été plus lumineux. Je me souviens de ces moments simples mais magiques : quand nous nous mettions du gloss au fond de la classe, nos câlins, tes regards qui illuminent mon monde, et même quand tu me taquines en m’appelant « bro » ou « garçon » 😻.
+Tu es ma source de joie, mon réconfort, mon rire, ma folie douce et ma lumière dans les jours sombres.
+Je t’aime plus que les mots ne pourront jamais le dire.
+Ton Mambweni 😘`;
+
+function goToStep2() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (name === "") {
+    alert("Entre un prénom 😊");
+    return;
+  }
+
+  const music = document.getElementById("bgMusic");
+  music.play();
+
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
+  document.getElementById("questionText").innerText =
+    name + ", veux-tu être ma Valentine ? 🥺👉👈";
+}
+
+function sayYes() {
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+  scrollMessage();
+}
+
+function fleeNo() {
+  const noBtn = document.getElementById("noBtn");
+  const card = document.querySelector(".card");
+  const maxX = card.clientWidth - noBtn.clientWidth - 10;
+  const maxY = card.clientHeight - noBtn.clientHeight - 10;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+}
+
+function scrollMessage() {
+  const messageDiv = document.getElementById("finalMessage");
+  let index = 0;
+  function type() {
+    if (index < finalText.length) {
+      messageDiv.innerHTML += finalText.charAt(index);
+      index++;
+      setTimeout(type, 20);
+    } else {
+      document.getElementById("continueBtn").classList.remove("hidden");
+      document.getElementById("noContinueBtn").classList.remove("hidden");
+    }
+  }
+  type();
+}
+
+function goToStep4() {
+  document.getElementById("step3").classList.add("hidden");
+  document.getElementById("step4").classList.remove("hidden");
+  showPhoto();
+}
+
+function fleeNoContinue() {
+  const noBtn = document.getElementById("noContinueBtn");
+  const card = document.querySelector(".card");
+  const maxX = card.clientWidth - noBtn.clientWidth - 10;
+  const maxY = card.clientHeight - noBtn.clientHeight - 10;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+}
+
+const photos = [
+  "photos/photo1.jpg","photos/photo2.jpg","photos/photo3.jpg",
+  "photos/photo4.jpg","photos/photo5.jpg"
+];
+
+let currentPhoto = 0;
+
+function showPhoto() {
+  const img = document.getElementById("photoDisplay");
+  img.src = photos[currentPhoto];
+  if (currentPhoto === photos.length - 1) {
+    document.getElementById("nextPhotoBtn").classList.add("hidden");
+    document.getElementById("finishBtn").classList.remove("hidden");
+  }
+}
+
+function nextPhoto() {
+  if (currentPhoto < photos.length - 1) {
+    currentPhoto++;
+    showPhoto();
+  }
+}
+
+function finishMessage() {
+  document.getElementById("photoDisplay").classList.add("hidden");
+  document.getElementById("nextPhotoBtn").classList.add("hidden");
+  document.getElementById("finishBtn").classList.add("hidden");
+  const loveMsg = document.getElementById("loveMessage");
+  loveMsg.innerText = "Je t'aime ma Nzeba 💖";
+  loveMsg.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
